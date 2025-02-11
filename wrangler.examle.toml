@@ -1,0 +1,35 @@
+name = "my-project"
+main = "src/index.ts"
+compatibility_date = "2024-04-03"
+compatibility_flags = ["nodejs_compat", "rpc"]
+account_id = "abc123"
+
+[observability]
+enabled = true
+head_sampling_rate = 1
+
+[[workflows]]
+name = "workflow-live"
+binding = "WORKFLOW_LIVE"
+class_name = "WorkFlowLive"
+
+[[durable_objects.bindings]]
+name = "WEBSOCKET_DO"
+class_name = "WebSocketDO"
+
+[[migrations]]
+tag = "v1"
+new_classes = ["WebSocketDO"]
+
+[[kv_namespaces]]
+binding = "MY_KV"
+# Add your KV namespace ID in your private wrangler.toml
+# id = "xxx"
+# preview_id = "xxx"
+
+[vars]
+# Add your API keys in your private wrangler.toml or using wrangler secret
+# OPENAI_API_KEY = "xxx"
+
+[assets]
+directory = "src/static"

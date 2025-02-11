@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Workflow</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 p-8">
+  <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+    <h1 class="text-2xl font-bold mb-4">Simple Workflow</h1>
+
+    <button id="start"
+      class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed">
+      Start Workflow
+    </button>
+
+    <div class="mt-6">
+      <h2 class="text-lg font-semibold mb-2">Live Logs</h2>
+      <pre id="logs" class="bg-gray-50 p-4 rounded-md h-64 overflow-auto font-mono text-sm"></pre>
+    </div>
+  </div>
+
+  <script>
+    const logs = document.getElementById('logs');
+    const startBtn = document.getElementById('start');
+    const ws = new WebSocket(`${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/ws`);
+
+    ws.onmessage = (e) => {
+      const { message, time } = JSON.parse(e.data);
+      const log = document.createElement('div');
+      log.textContent = `${time} ${message}`;
+      logs.appendChild(log);
+      logs.scrollTop = logs.scrollHeight;
+      if (message.includes('complete') || message.includes('Failed')) {
+        startBtn.disabled = false;
+      }
+    };
+
+    startBtn.onclick = async () => {
+      startBtn.disabled = true;
+      try {
+        const res = await fetch('/api/workflow', { method: 'POST' });
+        const { id } = await res.json();
+        console.log('Started workflow:', id);
+      } catch (err) {
+        console.error('Failed to start workflow:', err);
+        startBtn.disabled = false;
+      }
+    };
+  </script>
+</body>
+
+</html>

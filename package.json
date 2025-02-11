@@ -1,0 +1,13 @@
+{
+  "name": "workflow-live",
+  "version": "0.0.1",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250204.0",
+    "typescript": "^5.0.4",
+    "wrangler": "^3.107.3"
+  }
+}

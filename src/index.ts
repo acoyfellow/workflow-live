@@ -53,7 +53,6 @@ export class WorkFlowLive extends WorkflowEntrypoint<Env> {
   async run(event: WorkflowEvent<{}>, step: WorkflowStep) {
     const log = async (msg: string) => {
       const do_id = this.env.WEBSOCKET_DO.idFromName('broadcast');
-      console.log('do_id', do_id);
       await this.env.WEBSOCKET_DO.get(do_id).fetch('http://internal/', {
         method: 'POST',
         body: msg
@@ -73,6 +72,7 @@ export class WorkFlowLive extends WorkflowEntrypoint<Env> {
       await log('Workflow complete!');
       return { success: true };
     } catch (error: any) {
+      console.error(error);
       await log(`Failed: ${error.message}`);
       return { success: false, error: error.message };
     }

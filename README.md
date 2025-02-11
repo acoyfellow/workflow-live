@@ -47,20 +47,20 @@ git clone https://github.com/acoyfellow/workflow-live
 cd workflow-live
 
 # Install dependencies 
-npm install
+bun install
 
 # Configure Cloudflare
 wrangler login
 
 # Deploy
-npm run deploy
+bun run deploy
 ```
 
 ### Development
 
-===
-npm run dev
-===
+```
+bun run dev
+```
 
 ## Architecture
 

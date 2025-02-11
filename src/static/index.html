@@ -34,11 +34,12 @@
 
     ws.onmessage = (e) => {
       const { message, time } = JSON.parse(e.data);
+      console.log('onmessage', { time, message })
       const log = document.createElement('div');
       log.textContent = `${new Date(time).toLocaleTimeString()} ${message}`;
       logs.appendChild(log);
       logs.scrollTop = logs.scrollHeight;
-      if (message.includes('complete') || message.includes('Failed')) {
+      if (message.includes('complete')) {
         startBtn.disabled = false;
       }
     };
@@ -46,9 +47,9 @@
     startBtn.onclick = async () => {
       startBtn.disabled = true;
       try {
+        logs.textContent = "";
         const res = await fetch('/api/workflow', { method: 'POST' });
         const { id } = await res.json();
-        logs.textContent = "";
         console.log('Started workflow:', id);
       } catch (err) {
         console.error('Failed to start workflow:', err);

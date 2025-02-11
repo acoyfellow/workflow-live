@@ -1,5 +1,7 @@
 # Real-Time Workflow Monitor
 
+![alt text](https://github.com/acoyfellow/workflow-live/blob/main/static/sketch.svg?raw=true)
+
 Simple pattern for real-time workflow monitoring using Cloudflare Workers, Workflows, and Durable Objects.
 
 ## Why?

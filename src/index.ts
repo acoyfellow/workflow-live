@@ -42,42 +42,46 @@ export class WebSocketDO implements DurableObject {
     }
 
     const message = await request.text();
-    this.sockets.forEach(ws => ws.readyState === WebSocket.OPEN &&
-      ws.send(JSON.stringify({ message, time: new Date().toISOString() })));
+    this.sockets.forEach(ws =>
+      ws.readyState === WebSocket.OPEN &&
+      ws.send(JSON.stringify({ message, time: new Date().toISOString() })
+      ));
     return new Response('OK');
   }
 }
 
 // Simple workflow with logging
 export class WorkFlowLive extends WorkflowEntrypoint<Env> {
+  private stub = this.env.WEBSOCKET_DO.get(
+    this.env.WEBSOCKET_DO.idFromName('broadcast')
+  );
+  private q = Promise.resolve();
+
   async run(event: WorkflowEvent<{}>, step: WorkflowStep) {
-    const log = async (msg: string) => {
-      const do_id = this.env.WEBSOCKET_DO.idFromName('broadcast');
-      await this.env.WEBSOCKET_DO.get(do_id).fetch('http://internal/', {
+    const log = (msg: string) => this.q = this.q.then(async () => {
+      await this.stub.fetch('http://internal/', {
         method: 'POST',
         body: msg
       });
-    };
+    });
 
     try {
       await log('Starting workflow...');
-      await step.sleep("sleep for 1 second", "1 second");
+      // await step.sleep("sleep for 1 second", "1 second");
       await step.do('step1', async () => { await log('Processing step 1...'); return true; });
-      await step.sleep("sleep for 1 second", "1 second");
       await step.do('step2', async () => { await log('Processing step 2...'); return true; });
-      await step.sleep("sleep for 1 second", "1 second");
       await step.do('step3', async () => { await log('Processing step 3...'); return true; });
-      await step.sleep("sleep for 1 second", "1 second");
       await step.do('step4', async () => {
         await log('Processing step 4...');
-        if (Math.random() > 0.5) throw new Error('Random failure');
+        await step.sleep("sleep for 1 second", "1 second");
+        if (Math.random() > 0.75) throw new Error('Random failure!');
         return true;
       });
       await log('Workflow complete!');
       return { success: true };
     } catch (error: any) {
       console.error(error);
-      await log(`Failed: ${error.message}`);
+      await log(`Workflow failed: ${error.message}`);
       return { success: false, error: error.message };
     }
   }

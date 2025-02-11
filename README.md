@@ -1,6 +1,14 @@
-# workflow-live
+# Real-Time Workflow Monitor
 
 Simple pattern for real-time workflow monitoring using Cloudflare Workers, Workflows, and Durable Objects.
+
+## Why?
+This project started as a challenge to build a real-time interface for Cloudflare Workers. The pattern enables powerful architectures for:
+- AI Agent monitoring and control
+- Edge computing mini-apps
+- Real-time workflow orchestration
+- Live system monitoring
+- Interactive edge applications
 
 ## Demo
 Try it live at [workflow-live.coey.dev](https://workflow-live.coey.dev/)

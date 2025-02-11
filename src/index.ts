@@ -61,9 +61,13 @@ export class WorkFlowLive extends WorkflowEntrypoint<Env> {
 
     try {
       await log('Starting workflow...');
+      await step.sleep("sleep for 1 second", "1 second");
       await step.do('step1', async () => { await log('Processing step 1...'); return true; });
+      await step.sleep("sleep for 1 second", "1 second");
       await step.do('step2', async () => { await log('Processing step 2...'); return true; });
+      await step.sleep("sleep for 1 second", "1 second");
       await step.do('step3', async () => { await log('Processing step 3...'); return true; });
+      await step.sleep("sleep for 1 second", "1 second");
       await step.do('step4', async () => {
         await log('Processing step 4...');
         if (Math.random() > 0.5) throw new Error('Random failure');

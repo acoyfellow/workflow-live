@@ -170,7 +170,6 @@ dist
 
 .dev.vars
 .wrangler/
-wrangler.toml
 
 # macOS
 .DS_Store
